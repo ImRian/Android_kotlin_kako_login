@@ -1,11 +1,17 @@
+import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
 }
 
 android {
     namespace = "com.example.kakaologin"
     compileSdk = 34
+    viewBinding{
+        enable = true
+    }
 
     defaultConfig {
         applicationId = "com.example.kakaologin"
@@ -74,4 +80,7 @@ dependencies {
     implementation ("com.kakao.sdk:v2-friend:2.20.0") // 피커 API 모듈
     implementation ("com.kakao.sdk:v2-navi:2.20.0") // 카카오내비 API 모듈
     implementation ("com.kakao.sdk:v2-cert:2.20.0") // 카카오톡 인증 서비스 API 모듈
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

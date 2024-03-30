@@ -19,10 +19,12 @@ class KaKaoAuthViewModel(application: Application): AndroidViewModel(application
         const val TAG = "KaKaoAuthViewModel"
     }
     private val context =application.applicationContext
-    val isLoggedIn = MutableStateFlow<Boolean>(value = false)
+
+    val isLoggedIn = MutableStateFlow<Boolean>(false)
     fun kakoLogin(){
         viewModelScope.launch {
-            isLoggedIn.emit(handleKaKaoLogin()) }
+            isLoggedIn.emit(handleKaKaoLogin())
+        }
     }
     fun kakoLogout() {
         viewModelScope.launch {
@@ -36,11 +38,11 @@ class KaKaoAuthViewModel(application: Application): AndroidViewModel(application
             UserApiClient.instance.logout { error ->
                 if (error != null) {
                     Log.e(TAG, "로그아웃 실패. SDK에서 토큰 삭제됨", error)
-                    continuation.resume(value=false)
+                    continuation.resume(false)
                 }
                 else {
                     Log.i(TAG, "로그아웃 성공. SDK에서 토큰 삭제됨")
-                    continuation.resume(value = true)
+                    continuation.resume( true)
                 }
             } }
     private suspend fun handleKaKaoLogin() :Boolean =
@@ -50,10 +52,10 @@ class KaKaoAuthViewModel(application: Application): AndroidViewModel(application
             val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
                 if (error != null) {
                     Log.e(TAG, "카카오계정으로 로그인 실패", error)
-                    continuation.resume(value = false)
+                    continuation.resume(false)
                 } else if (token != null) {
                     Log.i(TAG, "카카오계정으로 로그인 성공 ${token.accessToken}")
-                    continuation.resume(value = true)
+                    continuation.resume(true)
                 }
             }
 
@@ -80,6 +82,10 @@ class KaKaoAuthViewModel(application: Application): AndroidViewModel(application
             }  }
         // 로그인 조합 예제
 
-
+    fun updateLoginState(isLoggedInNow: Boolean) {
+        viewModelScope.launch {
+            isLoggedIn.emit(isLoggedInNow)
+        }
+    }
 
 }
